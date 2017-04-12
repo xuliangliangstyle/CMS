@@ -1,0 +1,42 @@
+/*!
+ * Bootstrap v2.3.2
+ *
+ * Copyright 2012 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ */
+     #superTable{
+       border-style:solid;
+       border-width:1px;
+       border-color:black;
+       text-align:center;
+       font-size:8px;
+       margin:0px;
+       padding:0px;
+       width:auto;
+       position:absolute;
+       z-index:100;
+       display:none;
+     }
+     table.#superTable tr,td{
+       border:0px;
+     }
+     .currentCalendar{
+       color:black;
+       font-size:8px;
+       background-color:#FCF;
+     }
+     .currentDayCalendar{
+       color:#F09;
+       font-size:8px;
+     }
+     .lastCurrentCalendar,.nextCurrentCalendar,.lastYearCalendar,.nextYearCalendar{
+       color:#999;
+       font-size:8px;
+     }
+     .weekdayCalendar{
+       width:25px;
+       color:blue;
+     }

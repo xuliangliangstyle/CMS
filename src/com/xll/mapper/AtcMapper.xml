@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xll.mapper.AtcMapper">
+<resultMap id="BaseResultMap" type="com.xll.po.Atctype">
+   <id column="tid" jdbcType="INTEGER" property="tid"/>
+   <result column="tname" jdbcType="VARCHAR" property="tname"/>
+</resultMap>
+    <select id="select_ID" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+       select * from atc_type where id=#{id}
+    </select>
+    <select id="queryAll"  resultMap="BaseResultMap">
+       select * from atc_type 
+    </select>
+</mapper>

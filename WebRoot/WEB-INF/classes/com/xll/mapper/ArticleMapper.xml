@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xll.mapper.ArticleMapper">
+<resultMap id="BaseResultMap" type="com.xll.po.Article">
+  <id column="id" jdbcType="INTEGER" property="id"/>
+  <result column="title" jdbcType="VARCHAR" property="title"/>
+  <result column="content" jdbcType="VARCHAR" property="content"/>
+  <result column="deplaytime" jdbcType="INTEGER" property="deplaytime"/>
+  <result column="state" jdbcType="INTEGER" property="state"/>
+  <result column="pageview" jdbcType="INTEGER" property="pageview"/>
+  <result column="description" jdbcType="VARCHAR" property="description"/>
+  <result column="picpath" jdbcType="VARCHAR" property="picpath"/>
+  <association property="author" column="authorid" javaType="com.xll.po.Author">
+     	<result column="name" jdbcType="VARCHAR" property="name"/>
+   		<result column="age" jdbcType="INTEGER" property="age"/>
+   		<result  column="sex" jdbcType="INTEGER" property="sex"/>
+   		<result column="createtime" jdbcType="INTEGER" property="createtime"/> 
+  </association>
+  <association property="atctype" column="typeid" javaType="com.xll.po.Atctype">
+        <id column="tid" jdbcType="INTEGER" property="tid"/>
+  		<result column="tname" jdbcType="VARCHAR" property="tname"/>
+  </association>
+</resultMap>
+    <select id="select_ID" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+       SELECT ar.*,att.*,au.name,au.age,au.sex,au.createtime FROM author au,article ar,atc_type att WHERE au.id =ar.`authorid` AND ar.`typeid`=att.tid AND ar.`id`=#{id}
+    </select>
+    <select id="dyQueryAll" parameterType="com.xll.po.Article" resultMap="BaseResultMap" >
+       SELECT ar.id,ar.title,ar.deplaytime,ar.pageview,ar.description,ar.picpath,att.tid,att.tname,au.name,au.age,au.sex,au.createtime FROM author au,article ar,atc_type att WHERE au.id=ar.`authorid` AND ar.`typeid`=att.tid
+       <trim>
+        <if test="starttime!=null">
+           and ar.deplaytime >=#{starttime}
+        </if>
+        <if test="endtime!=null">
+           and ar.deplaytime &lt;=#{endtime}
+        </if>
+        <if test="title !=null">
+           and ar.title like #{title}
+        </if>
+        <if test="atctype!=null">
+           <if test="atctype.tid!=0">
+               and att.tid=#{atctype.tid}
+          </if>
+        </if>
+       </trim>
+       <if test="orderBy!=null">
+           <if test='orderBy =="deplaytime_DESC"'>
+              order by deplaytime Desc
+           </if>
+           <if test='orderBy == "pageview_DESC"'>
+              order by pageview Desc
+           </if>
+        </if>
+       
+        limit #{startIndex},#{pageSize}
+    </select>
+        <select id="dyQueryAllCount" parameterType="com.xll.po.Article" resultType="java.lang.Integer">
+       SELECT count(ar.id) FROM author au,article ar,atc_type att WHERE au.id=ar.`authorid` AND ar.`typeid`=att.tid
+       <trim>
+        <if test="starttime!=null">
+           and ar.deplaytime >=#{starttime}
+        </if>
+        <if test="endtime!=null">
+           and ar.deplaytime &lt;=#{endtime}
+        </if>
+        <if test="atctype!=null">
+           <if test="atctype.tid!=0">
+               and att.tid=#{atctype.tid}
+          </if>
+        </if>
+       </trim>      
+    </select>
+   <update id="update_ID" parameterType="com.xll.po.Article">
+    		update article
+    		<set>
+    		  <if test="title !=null">
+    		   title=#{title},
+    		  </if>	
+    		  <if test="content !=null">
+    		   content=#{content},
+    		  </if>	  
+    		  <if test="picpath !=null">
+    		   picpath=#{picpath},
+    		  </if>  
+    		  <if test="atctype !=null">
+                <if test="atctype.tid !=0">
+                  typeid=#{atctype.tid},
+                </if>
+             </if> 
+    		</set>
+    		where id=#{id}
+    </update>
+     <update id="update_ID_pageview" parameterType="java.lang.Integer">
+    		UPDATE article SET pageview=(pageview+1) WHERE id=#{id};
+    </update>
+    <insert id="insert_tv" parameterType="com.xll.po.Article" useGeneratedKeys="true" keyProperty="id">
+          insert into article
+          <trim prefix="(" suffix=")" suffixOverrides=",">
+             <if test="title !=null">
+                title,
+             </if>
+              <if test="content !=null">
+                content,
+             </if>
+              <if test="picpath!=null">
+                picpath,
+             </if>
+             <if test="deplaytime!=null">
+                deplaytime,
+             </if>
+             <if test="atctype !=null">
+                <if test="atctype.tid !=0">
+                  typeid,
+                </if>
+             </if>
+              state,authorid,description,
+           </trim>
+            values
+           <trim prefix="(" suffix=")" suffixOverrides=",">            
+             <if test="title !=null">
+                #{title},
+             </if>
+              <if test="content !=null">
+                #{content},
+             </if>
+              <if test="picpath!=null">
+	            #{picpath},
+             </if>
+             <if test="deplaytime!=null">
+                #{deplaytime},
+             </if>
+             <if test="atctype !=null">
+                <if test="atctype.tid !=0">
+                  #{atctype.tid},
+                </if>
+             </if>
+             1,1,'暂无描述',
+          </trim>
+    </insert>
+</mapper>
